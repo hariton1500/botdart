@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 
+import 'Menu/Reg/handlers.dart';
 import 'Menu/UnReg/handlers.dart';
 import 'helper.dart';
 import 'models.dart';
@@ -15,12 +16,12 @@ Future<void> main(List<String> arguments) async {
 
   final username = (await Telegram(token).getMe()).username;
 
-  int readedMessageId = 2050;
+  int readedMessageId = 2231;
   bool isRegistered = false;
 
   var teledart = TeleDart(token, Event(username!));
 
-  var mesStream = teledart.onMessage();
+  var mesStream = teledart.onMessage(entityType: '*');
   var commandStartStream = teledart.onCommand('start');
   //var m = Data();
   Map<String, Abon> abons = {};
@@ -28,16 +29,17 @@ Future<void> main(List<String> arguments) async {
   commandStartStream.listen((commMess) async {
     isRegistered = await ifRegistered(commMess.chat.id);
     if (!isRegistered) {
-      teledart.sendMessage(commMess.chat.id, mess['start']!,
-          reply_markup: markups['startMurkups']!);
+      teledart.sendMessage(commMess.chat.id, mess['start']! + menu['topNotIn']!,
+          reply_markup: markups['topNotIn']!);
     } else {
-      teledart.sendMessage(commMess.chat.id, mess['isReg']!);
+      teledart.sendMessage(commMess.chat.id, mess['isReg']! + menu['topIn']!);
     }
   });
 
   Future<void> messageHandler(DateTime date, int chatId, String text) async {
     text = text.toLowerCase();
-    print(abons[chatId.toString()]!.toString());
+    //print('[$date] ($chatId) $text');
+    print('in <$text>' + abons[chatId.toString()]!.toString());
     if (text.contains('stop')) {
       print('exiting on stop command');
       teledart.stop();
@@ -46,7 +48,7 @@ Future<void> main(List<String> arguments) async {
     var statusReg = abons[chatId.toString()]!.statusReg;
     switch (statusReg) {
       case true:
-        //regHandler();
+        regHandler(text, teledart, chatId, abons[chatId.toString()]!);
         break;
       case false:
         unregHandler(text, teledart, chatId, abons[chatId.toString()]!);
@@ -64,7 +66,7 @@ Future<void> main(List<String> arguments) async {
       if (message.text != null) {
         int chatId = message.chat.id;
         String text = message.text!;
-        print('[$date] ($chatId) $text');
+        //print('[$date] ($chatId) $text');
         if (!abons.containsKey(chatId.toString())) {
           abons[chatId.toString()] = Abon.loadOrCreate(chatId);
         }
