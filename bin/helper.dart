@@ -4,6 +4,7 @@ import 'dart:io' as io;
 var btnAbout = KeyboardButton(text: 'Описание');
 var btnReg = KeyboardButton(text: 'Авторизация');
 var btnShortly = KeyboardButton(text: 'Список ID (кратко)');
+var btnId = KeyboardButton(text: 'Ввести ID');
 
 var startM = ReplyKeyboardMarkup(keyboard: [
   [btnAbout, btnReg]
