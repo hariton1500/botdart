@@ -11,8 +11,11 @@ class Abon {
   String? phone;
   List<String>? guids;
   bool? statusReg;
+  Map<String, Map<String, dynamic>>? users;
+  int? selectedId;
 
   Abon.loadOrCreate(int id) {
+    users = {};
     var file = File('$id.dat');
     if (file.existsSync()) {
       print('file exists');
@@ -40,6 +43,27 @@ class Abon {
   Future<void> saveGuids() async {
     var file = File('$chatId.dat');
     file.writeAsString(jsonEncode(guids));
+  }
+
+  Future<Map<String, dynamic>> getInfo(int chatId, String guid) async {
+    print('start get abon info for $guid');
+    String apiUrl = 'https://evpanet.com/api/apk/user/info/' + guid;
+    var headers = {'token': chatId.toString()};
+    var resp = await http.get(Uri.parse(apiUrl), headers: headers);
+    return jsonDecode(resp.body);
+  }
+
+  String showUsersInfo(bool brief) {
+    if (brief) {
+      return guids!.map((guid) => users![guid]!['id']).toList().toString();
+    } else {
+      return '';
+    }
+  }
+
+  String showUserInfo(int id) {
+    var info = users!.values.firstWhere((user) => user['id'].toString() == id.toString());
+    return 'ID: ${info['id']}\nФИО: ${info['name']}\nБаланс: ${info['extra_account']} руб.\nДата окончания срока действия пакета: ${info['packet_end']}\nТариф: ${info['tarif_name']} (${info['tarif_sum']} руб.)';
   }
 
   @override

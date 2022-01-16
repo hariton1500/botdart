@@ -16,7 +16,7 @@ Future<void> main(List<String> arguments) async {
 
   final username = (await Telegram(token).getMe()).username;
 
-  int readedMessageId = 2231;
+  int readedMessageId = 2304;
   bool isRegistered = false;
 
   var teledart = TeleDart(token, Event(username!));
@@ -42,6 +42,7 @@ Future<void> main(List<String> arguments) async {
     print('in <$text>' + abons[chatId.toString()]!.toString());
     if (text.contains('stop')) {
       print('exiting on stop command');
+      await teledart.sendMessage(chatId, 'Остановка бота', reply_markup: markups['empty']);
       teledart.stop();
       exit(1);
     }
