@@ -28,7 +28,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
           break;
         case 'справочник абонента':
           bot.sendMessage(chatId,
-              'Добро пожаловать, ${bot.getChat(chatId).then((value) => value.first_name)} в справочную абонента. Выбор тем внизу экрана:',
+              'Добро пожаловать в справочную абонента. Выбор тем внизу экрана:',
               reply_markup: markups['help']);
           abon.menuLevel = 'help';
           break;

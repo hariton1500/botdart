@@ -60,23 +60,28 @@ var mess = {
 };
 var markups = {
   'topIn': ReplyKeyboardMarkup(keyboard: [
-    [btnAccs, btnInfo, btnReg]
+    [btnAccs, btnInfo],
+    [btnReg]
   ], resize_keyboard: true),
   'topNotIn': ReplyKeyboardMarkup(keyboard: [
     [btnReg, btnAbout]
   ], resize_keyboard: true),
   'empty': ReplyKeyboardRemove(remove_keyboard: true),
   'reg': ReplyKeyboardMarkup(keyboard: [
-    [btnId, btnPhone, btnBack]
+    [btnId, btnPhone],
+    [btnBack]
   ], resize_keyboard: true),
   'accs': ReplyKeyboardMarkup(keyboard: [
-    [btnBrief, btnFull, btnBack]
+    [btnBrief, btnFull],
+    [btnBack]
   ], resize_keyboard: true),
   'id': ReplyKeyboardMarkup(keyboard: [
-    [btnPay, btnMess, btnBack]
+    [btnPay, btnMess],
+    [btnBack]
   ], resize_keyboard: true),
   'help': ReplyKeyboardMarkup(keyboard: [
-    [btnPayVars, btnList, btnPayVars, btnBack]
+    [btnPayVars, btnList],
+    [btnChR, btnBack]
   ], resize_keyboard: true),
 };
 
