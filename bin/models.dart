@@ -11,11 +11,11 @@ class Abon {
   String? phone;
   List<String>? guids;
   bool? statusReg;
-  Map<String, Map<String, dynamic>>? users;
+  //Map<String, Map<String, dynamic>>? users;
   int? selectedId;
 
   Abon.loadOrCreate(int id) {
-    users = {};
+    //users = {};
     var file = File('$id.dat');
     if (file.existsSync()) {
       print('file exists');
@@ -53,16 +53,17 @@ class Abon {
     return jsonDecode(resp.body);
   }
 
-  String showUsersInfo(bool brief) {
+  String showUsersInfo(bool brief, Map<String, Map<String, dynamic>> users) {
     if (brief) {
-      return guids!.map((guid) => users![guid]!['id']).toList().toString();
+      return guids!.map((guid) => users[guid]!['id']).toList().toString();
     } else {
       return '';
     }
   }
 
-  String showUserInfo(int id) {
-    var info = users!.values.firstWhere((user) => user['id'].toString() == id.toString());
+  String showUserInfo(int id, Map<String, Map<String, dynamic>> users) {
+    var info = users.values
+        .firstWhere((user) => user['id'].toString() == id.toString());
     return 'ID: ${info['id']}\nФИО: ${info['name']}\nБаланс: ${info['extra_account']} руб.\nДата окончания срока действия пакета: ${info['packet_end']}\nТариф: ${info['tarif_name']} (${info['tarif_sum']} руб.)';
   }
 

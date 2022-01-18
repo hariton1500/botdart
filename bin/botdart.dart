@@ -16,7 +16,7 @@ Future<void> main(List<String> arguments) async {
 
   final username = (await Telegram(token).getMe()).username;
 
-  int readedMessageId = 2304;
+  int readedMessageId = 2369;
   bool isRegistered = false;
 
   var teledart = TeleDart(token, Event(username!));
@@ -25,6 +25,7 @@ Future<void> main(List<String> arguments) async {
   var commandStartStream = teledart.onCommand('start');
   //var m = Data();
   Map<String, Abon> abons = {};
+  Map<String, Map<String, dynamic>> users = {};
 
   commandStartStream.listen((commMess) async {
     isRegistered = await ifRegistered(commMess.chat.id);
@@ -42,14 +43,15 @@ Future<void> main(List<String> arguments) async {
     print('in <$text>' + abons[chatId.toString()]!.toString());
     if (text.contains('stop')) {
       print('exiting on stop command');
-      await teledart.sendMessage(chatId, 'Остановка бота', reply_markup: markups['empty']);
+      await teledart.sendMessage(chatId, 'Остановка бота',
+          reply_markup: markups['empty']);
       teledart.stop();
       exit(1);
     }
     var statusReg = abons[chatId.toString()]!.statusReg;
     switch (statusReg) {
       case true:
-        regHandler(text, teledart, chatId, abons[chatId.toString()]!);
+        regHandler(text, teledart, chatId, abons[chatId.toString()]!, users);
         break;
       case false:
         unregHandler(text, teledart, chatId, abons[chatId.toString()]!);

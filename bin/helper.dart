@@ -5,14 +5,18 @@ var btnAbout = KeyboardButton(text: 'Описание');
 var btnReg = KeyboardButton(text: 'Авторизация');
 var btnShortly = KeyboardButton(text: 'Список ID (кратко)');
 var btnId = KeyboardButton(text: 'Ввести ID');
-var btnPhone = KeyboardButton(text: 'Ввести номер телефона', request_contact: true);
+var btnPhone =
+    KeyboardButton(text: 'Ввести номер телефона', request_contact: true);
 var btnBack = KeyboardButton(text: 'Назад');
 var btnAccs = KeyboardButton(text: 'Учетные записи');
-var btnInfo = KeyboardButton(text: 'Полезная информация');
+var btnInfo = KeyboardButton(text: 'Справочник абонента');
 var btnBrief = KeyboardButton(text: 'Показать кратко');
 var btnFull = KeyboardButton(text: 'Показать подробно');
 var btnPay = KeyboardButton(text: 'Пополнить баланс');
 var btnMess = KeyboardButton(text: 'Сообщение с службу поддержки');
+var btnChR = KeyboardButton(text: 'Выбор WiFi роутера');
+var btnList = KeyboardButton(text: 'Список услуг компании EvpaNet');
+var btnPayVars = KeyboardButton(text: 'Способы оплаты');
 
 var options = {
   'back': 'Возврат/Отмена',
@@ -20,7 +24,7 @@ var options = {
   'askPhone': 'Указать номер телефона:',
   'reg': 'Авторизация',
   'about': 'Описание',
-  'info': 'Полезная информация',
+  'info': btnInfo.text,
   'accs': 'Учетные записи',
   'brief': btnBrief.text,
   'full': btnFull.text,
@@ -32,7 +36,8 @@ var menu = {
       '1. ${options['askId']}\n2. ${options['askPhone']}\n3. ${options['back']}',
   'topIn': '1. ${options['accs']}\n2. ${options['info']}\n3. ${options['reg']}',
   'topNotIn': '1. ${options['reg']}\n2. ${options['about']}',
-  'accs': '1. ${options['brief']}\n2. ${options['full']}\n3. ID - Меню управления учетной записью\n4. ${options['back']}',
+  'accs':
+      '1. ${options['brief']}\n2. ${options['full']}\n3. ID - Меню управления учетной записью\n4. ${options['back']}',
   'id': '1. ${options['pay']}\n2. ${options['mess']}\n3. ${options['back']}',
 };
 
@@ -64,8 +69,15 @@ var markups = {
   'reg': ReplyKeyboardMarkup(keyboard: [
     [btnId, btnPhone, btnBack]
   ], resize_keyboard: true),
-  'accs': ReplyKeyboardMarkup(keyboard: [[btnBrief, btnFull, btnBack]], resize_keyboard: true),
-  'id': ReplyKeyboardMarkup(keyboard: [[btnPay, btnMess, btnBack]], resize_keyboard: true)
+  'accs': ReplyKeyboardMarkup(keyboard: [
+    [btnBrief, btnFull, btnBack]
+  ], resize_keyboard: true),
+  'id': ReplyKeyboardMarkup(keyboard: [
+    [btnPay, btnMess, btnBack]
+  ], resize_keyboard: true),
+  'help': ReplyKeyboardMarkup(keyboard: [
+    [btnPayVars, btnList, btnPayVars, btnBack]
+  ], resize_keyboard: true),
 };
 
 Future<bool> ifRegistered(int chatId) async {
