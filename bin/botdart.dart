@@ -28,8 +28,12 @@ Future<void> main(List<String> arguments) async {
   Map<String, Map<String, dynamic>> users = {};
 
   commandStartStream.listen((commMess) async {
-    isRegistered = await ifRegistered(commMess.chat.id);
+    isRegistered = await isChatRegistered(commMess.chat.id);
     if (!isRegistered) {
+      String chatId = commMess.chat.id.toString();
+      if (abons.containsKey(chatId)) {
+        abons.remove(chatId);
+      }
       teledart.sendMessage(commMess.chat.id, mess['start']! + menu['topNotIn']!,
           reply_markup: markups['topNotIn']!);
     } else {

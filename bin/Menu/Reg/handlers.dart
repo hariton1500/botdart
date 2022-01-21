@@ -1,3 +1,4 @@
+import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import '../../models.dart';
 import '../../helper.dart';
@@ -14,8 +15,6 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
           abon.statusReg = false;
           break;
         case 'учетные записи':
-          bot.sendMessage(chatId, mess['accs']! + menu['accs']!,
-              reply_markup: markups['accs']);
           abon.menuLevel = 'accs';
           for (var guid in abon.guids!) {
             var res = await abon.getInfo(chatId, guid);
@@ -25,6 +24,14 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
                   chatId, '${users[guid]!['id']} - информация загружена');
             }
           }
+          bot.sendMessage(chatId, mess['accs']! + menu['accs']!,
+              reply_markup: ReplyKeyboardMarkup(keyboard: [
+                [btnBrief, btnFull],
+                uidBtns(abon.guids!
+                    .map((guid) => int.parse(users[guid]!['id'].toString()))
+                    .toList()),
+                [btnBack]
+              ]));
           break;
         case 'справочник абонента':
           bot.sendMessage(chatId,
@@ -44,6 +51,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
           bot.sendMessage(chatId, abon.showUsersInfo(true, users));
           break;
         case 'показать подробно':
+          bot.sendMessage(chatId, abon.showUsersInfo(false, users));
           break;
         case 'назад':
           abon.menuLevel = 'top';
@@ -58,10 +66,11 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
                 abon.guids!.map((guid) => users[guid]!['id']).toList());
             if (list.contains(id.toString())) {
               print('$id found in ${abon.showUsersInfo(true, users)}');
-              bot.sendMessage(chatId,
-                  '${mess['id']}\n\n${abon.showUserInfo(id, users)}\n\n${menu['id']}',
-                  reply_markup: markups['id']);
               abon.selectedId = id;
+              abon.selectedGuid = abon.guids![list.indexOf(id.toString())];
+              bot.sendMessage(chatId,
+                  '${mess['id']}\n\n${abon.showUserInfo(users)}\n\n${menu['id']}',
+                  reply_markup: markups['id']);
               abon.menuLevel = 'id';
             } else {
               print('$id not found in ${abon.showUsersInfo(true, users)}');
@@ -73,12 +82,82 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
       break;
     case 'id':
       switch (text) {
+        case 'сообщение с службу поддержки':
+          bot.sendMessage(
+              chatId, 'Введите текст сообщения для службы поддержки:',
+              reply_markup: ReplyKeyboardMarkup(keyboard: [
+                [btnBack]
+              ]));
+          abon.menuLevel = 'id_mess';
+          break;
+        case 'пополнить баланс':
+          bot.sendMessage(chatId,
+              'Введите сумму платежа, учтите, что платежная система берет комиссию 6%',
+              reply_markup: ReplyKeyboardMarkup(keyboard: [
+                [btnBack]
+              ]));
+          abon.menuLevel = 'id_sum';
+          break;
         case 'назад':
           abon.menuLevel = 'accs';
           bot.sendMessage(chatId, mess['accs']! + menu['accs']!,
-              reply_markup: markups['accs']);
+              reply_markup: ReplyKeyboardMarkup(keyboard: [
+                [btnBrief, btnFull],
+                uidBtns(abon.guids!
+                    .map((guid) => int.parse(users[guid]!['id'].toString()))
+                    .toList()),
+                [btnBack]
+              ]));
           break;
         default:
+      }
+      break;
+    case 'id_mess':
+      switch (text) {
+        case 'назад':
+          abon.menuLevel = 'id';
+          bot.sendMessage(chatId,
+              '${mess['id']}\n\n${abon.showUserInfo(users)}\n\n${menu['id']}',
+              reply_markup: markups['id']);
+          break;
+        default:
+          var res = await abon.sendRemont(abon.selectedGuid!, chatId, text);
+          if (!res['error']) {
+            bot.sendMessage(chatId, res['message']);
+          }
+          bot.sendMessage(chatId,
+              '${mess['id']}\n\n${abon.showUserInfo(users)}\n\n${menu['id']}',
+              reply_markup: markups['id']);
+          abon.menuLevel = 'id';
+      }
+      break;
+    case 'id_sum':
+      switch (text) {
+        case 'назад':
+          abon.menuLevel = 'id';
+          bot.sendMessage(chatId,
+              '${mess['id']}\n\n${abon.showUserInfo(users)}\n\n${menu['id']}',
+              reply_markup: markups['id']);
+          break;
+        default:
+          if (int.tryParse(text) != null) {
+            bot.sendMessage(chatId,
+                'Для пополнения баланса учетной записи ${abon.selectedId} перейдите по ссылке:');
+            var res = await abon.getPaymentId(abon.selectedGuid!, chatId);
+            String url =
+                'https://paymaster.ru/payment/init?LMI_MERCHANT_ID=95005d6e-a21d-492a-a4c5-c39773020dd3&LMI_PAYMENT_AMOUNT=' +
+                    text.toString() +
+                    '&LMI_CURRENCY=RUB&LMI_PAYMENT_NO=' +
+                    res['message']['payment_id'].toString() +
+                    '&LMI_PAYMENT_DESC=%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20EvpaNet%20ID%20' +
+                    abon.selectedId.toString();
+            bot.sendMessage(chatId, '[URL]($url)',
+                parse_mode: 'markdown',
+                reply_markup: ReplyKeyboardMarkup(keyboard: [
+                  [btnBack]
+                ]));
+            abon.menuLevel = 'id';
+          }
       }
       break;
     case 'help':

@@ -13,6 +13,7 @@ class Abon {
   bool? statusReg;
   //Map<String, Map<String, dynamic>>? users;
   int? selectedId;
+  String? selectedGuid;
 
   Abon.loadOrCreate(int id) {
     //users = {};
@@ -57,18 +58,69 @@ class Abon {
     if (brief) {
       return guids!.map((guid) => users[guid]!['id']).toList().toString();
     } else {
-      return '';
+      return guids!
+          .map((guid) {
+            selectedGuid = guid;
+            selectedId = int.parse(users[guid]!['id'].toString());
+            return showUserInfo(users) + '\n';
+          })
+          .toList()
+          .toString();
     }
   }
 
-  String showUserInfo(int id, Map<String, Map<String, dynamic>> users) {
-    var info = users.values
-        .firstWhere((user) => user['id'].toString() == id.toString());
-    return 'ID: ${info['id']}\nФИО: ${info['name']}\nБаланс: ${info['extra_account']} руб.\nДата окончания срока действия пакета: ${info['packet_end']}\nТариф: ${info['tarif_name']} (${info['tarif_sum']} руб.)';
+  String showUserInfo(Map<String, Map<String, dynamic>> users) {
+    Map<String, dynamic> user = users[selectedGuid]!;
+    String name = user['name'];
+    double balance = double.parse(user['extra_account']);
+    //login = user['login'];
+    //password = user['clear_pass'];
+    int daysRemain = (int.parse(user['packet_secs']) / 60 / 60 / 24).round();
+    String endDate = user['packet_end'] ?? '00.00.0000 00:00';
+    double debt = double.parse(user['debt'] ?? 0.0);
+    String tarifName = user['tarif_name'];
+    int tarifSum = int.parse(user['tarif_sum'].toString());
+    String ip = user['real_ip'];
+    String street = user['street'];
+    String house = user['house'];
+    String flat = user['flat'];
+    bool auto = user['auto_activation'] == '1';
+    bool parentControl = user['flag_parent_control'] == '1';
+    //print(user['allowed_tarifs']);
+    //tarifs.addAll(user['allowed_tarifs']);
+    //String dayPrice = user['days_price'];
+    return 'ID: $selectedId\n'
+            'ФИО: $name\n'
+            'Баланс: $balance руб.\n'
+            'Задолжность: $debt руб.\n'
+            'Дата окончания срока действия пакета: $endDate. Осталось дней: $daysRemain\n'
+            'Тариф: $tarifName ($tarifSum руб.)\n'
+            'Адрес: $street д. $house кв. $flat\n'
+            'IP адрес: $ip\n'
+            'Авто активация: ' +
+        (auto ? 'Да\n' : 'Нет\n') +
+        'Родительский контроль: ' +
+        (parentControl ? 'Да\n' : 'Нет\n');
+  }
+
+  Future<Map<String, dynamic>> getPaymentId(String guid, int chatId) async {
+    String apiUrl = 'https://evpanet.com/api/apk/payment';
+    var headers = {'token': chatId.toString()};
+    var body = {'guid': guid};
+    var resp = await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+    return jsonDecode(resp.body);
+  }
+
+  Future<Map<String, dynamic>> sendRemont(guid, chatId, text) async {
+    String apiUrl = 'https://evpanet.com/api/apk/support/request';
+    var headers = {'token': chatId.toString()};
+    var body = {'message': text, 'guid': guid};
+    var resp = await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+    return jsonDecode(resp.body);
   }
 
   @override
   String toString() {
-    return '[$chatId] menu=$menuLevel[$menuTopic]{$statusReg} guids=${guids!.length}';
+    return '[$chatId] menu={$statusReg}$menuLevel guids=${guids!.length}';
   }
 }

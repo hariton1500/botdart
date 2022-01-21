@@ -5,15 +5,14 @@ var btnAbout = KeyboardButton(text: 'Описание');
 var btnReg = KeyboardButton(text: 'Авторизация');
 var btnShortly = KeyboardButton(text: 'Список ID (кратко)');
 var btnId = KeyboardButton(text: 'Ввести ID');
-var btnPhone =
-    KeyboardButton(text: 'Ввести номер телефона', request_contact: true);
+var btnPhone = KeyboardButton(text: 'Ввести номер телефона');
 var btnBack = KeyboardButton(text: 'Назад');
 var btnAccs = KeyboardButton(text: 'Учетные записи');
 var btnInfo = KeyboardButton(text: 'Справочник абонента');
 var btnBrief = KeyboardButton(text: 'Показать кратко');
 var btnFull = KeyboardButton(text: 'Показать подробно');
 var btnPay = KeyboardButton(text: 'Пополнить баланс');
-var btnMess = KeyboardButton(text: 'Сообщение с службу поддержки');
+var btnMess = KeyboardButton(text: 'Сообщение в службу поддержки');
 var btnChR = KeyboardButton(text: 'Выбор WiFi роутера');
 var btnList = KeyboardButton(text: 'Список услуг компании EvpaNet');
 var btnPayVars = KeyboardButton(text: 'Способы оплаты');
@@ -43,7 +42,7 @@ var menu = {
 
 var mess = {
   'start':
-      'Вас приветствует бот EvpaNet. С его помощью можно легко увидеть информацию о состоянии учетной записи, а еще, он будет присылать уведомления о скором окончании срока действия пакета интернет и другие оповещения.',
+      'Вас приветствует бот EvpaNet.\nС его помощью можно легко увидеть информацию о состоянии учетной записи, а еще, он будет присылать уведомления о скором окончании срока действия пакета интернет и другие оповещения.\n',
   'topIn': 'Главное меню:\n',
   'isReg':
       '\nДоступные команды:\n1. Авторизация - пройти новую авторизацию (для тех у кого много разных учетных записей)\n2. Показать учетные записи - отобразит краткий список учетных записей\n3. ID - покажет данные учетной записи более детально',
@@ -85,9 +84,13 @@ var markups = {
   ], resize_keyboard: true),
 };
 
-Future<bool> ifRegistered(int chatId) async {
+Future<bool> isChatRegistered(int chatId) async {
   var file = io.File('${chatId.toString()}.dat');
   return file.exists();
+}
+
+List<KeyboardButton> uidBtns(List<int> uids) {
+  return uids.map((uid) => KeyboardButton(text: uid.toString())).toList();
 }
 
 bool isPhone(String text) {
