@@ -87,7 +87,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
               chatId, 'Введите текст сообщения для службы поддержки:',
               reply_markup: ReplyKeyboardMarkup(keyboard: [
                 [btnBack]
-              ]));
+              ], resize_keyboard: true));
           abon.menuLevel = 'id_mess';
           break;
         case 'пополнить баланс':
@@ -95,7 +95,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
               'Введите сумму платежа, учтите, что платежная система берет комиссию 6%',
               reply_markup: ReplyKeyboardMarkup(keyboard: [
                 [btnBack]
-              ]));
+              ], resize_keyboard: true));
           abon.menuLevel = 'id_sum';
           break;
         case 'назад':
@@ -107,7 +107,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
                     .map((guid) => int.parse(users[guid]!['id'].toString()))
                     .toList()),
                 [btnBack]
-              ]));
+              ], resize_keyboard: true));
           break;
         default:
       }
@@ -151,7 +151,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
                     res['message']['payment_id'].toString() +
                     '&LMI_PAYMENT_DESC=%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20EvpaNet%20ID%20' +
                     abon.selectedId.toString();
-            bot.sendMessage(chatId, '[URL]($url)',
+            bot.sendMessage(chatId, '[ПОПОЛНИТЬ БАЛАНС]($url)',
                 parse_mode: 'markdown',
                 reply_markup: ReplyKeyboardMarkup(keyboard: [
                   [btnBack]

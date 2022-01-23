@@ -34,7 +34,7 @@ Future<void> main(List<String> arguments) async {
       if (abons.containsKey(chatId)) {
         abons.remove(chatId);
       }
-      teledart.sendMessage(commMess.chat.id, mess['start']! + menu['topNotIn']!,
+      teledart.sendMessage(commMess.chat.id, mess['start']! + mess['itCan']! + mess['about']! + menu['topNotIn']!,
           reply_markup: markups['topNotIn']!);
     } else {
       teledart.sendMessage(commMess.chat.id, mess['isReg']! + menu['topIn']!);
@@ -47,8 +47,9 @@ Future<void> main(List<String> arguments) async {
     print('in <$text>' + abons[chatId.toString()]!.toString());
     if (text.contains('stop')) {
       print('exiting on stop command');
-      await teledart.sendMessage(chatId, 'Остановка бота',
+      teledart.sendMessage(chatId, 'Остановка бота...',
           reply_markup: markups['empty']);
+      sleep(Duration(seconds: 1));
       teledart.stop();
       exit(1);
     }

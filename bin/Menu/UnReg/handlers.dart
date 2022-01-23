@@ -7,15 +7,15 @@ unregHandler(String text, TeleDart bot, int chatId, Abon abon) async {
     case 'top':
       switch (text) {
         case 'авторизация':
-          bot.sendMessage(chatId, mess['askId&Phone']!,
+          bot.sendMessage(chatId, mess['askId&Phone']! + menu['reg']!,
               reply_markup: markups['reg']);
           abon.menuLevel = 'askIdPhoneBack';
           break;
-        case 'информация':
+        case 'описание':
+          bot.sendMessage(chatId, mess['itCan']! + mess['about']!, reply_markup: markups['topNotIn']);
           break;
         default:
-          bot.sendMessage(chatId, menu[abon.statusReg! ? 'topIn' : 'topNotIn']!,
-              reply_markup: markups[abon.statusReg! ? 'topIn' : 'topNotIn']);
+          //bot.sendMessage(chatId, menu[abon.statusReg! ? 'topIn' : 'topNotIn']!, reply_markup: markups[abon.statusReg! ? 'topIn' : 'topNotIn']);
       }
       break;
     case 'askIdPhoneBack':
@@ -33,8 +33,8 @@ unregHandler(String text, TeleDart bot, int chatId, Abon abon) async {
           break;
         case 'назад':
           abon.statusReg = abon.guids!.isNotEmpty;
-          abon.menuLevel = abon.statusReg! ? 'topIn' : 'topNotIn';
-          bot.sendMessage(chatId, menu[abon.statusReg! ? 'topIn' : 'topNotIn']!,
+          abon.menuLevel = 'top';
+          bot.sendMessage(chatId, mess['start']! + mess['itCan']! + mess['about']! + menu[abon.statusReg! ? 'topIn' : 'topNotIn']!,
               reply_markup: markups[abon.statusReg! ? 'topIn' : 'topNotIn']);
           break;
         default:
@@ -45,8 +45,8 @@ unregHandler(String text, TeleDart bot, int chatId, Abon abon) async {
         abon.uid = int.parse(text);
         abon.menuLevel = 'askIdPhoneBack';
         bot.sendMessage(chatId, 'ID сохранен');
-        bot.sendMessage(chatId, mess['askId&Phone']!,
-            reply_markup: markups['reg']);
+        //sleep(Duration(seconds: 1));
+        //bot.sendMessage(chatId, mess['askId&Phone']!, reply_markup: markups['reg']);
         if (abon.phone != null && abon.phone!.isNotEmpty) {
           var resp = await abon.register();
           if (!resp['error']) {
@@ -59,19 +59,23 @@ unregHandler(String text, TeleDart bot, int chatId, Abon abon) async {
                 reply_markup: markups['topIn']);
           } else {
             abon.menuLevel = 'askIdPhoneBack';
-            bot.sendMessage(chatId, resp['message'],
+            bot.sendMessage(chatId, 'ИНФО: ' + resp['message'] + '\nПроверьте правильность введенных данных:\n' +  '\nID: ${abon.uid}\nНомер телефона: ${abon.phone}' '\n\n' + menu['reg']!,
                 reply_markup: markups['reg']);
           }
+        } else {
+          bot.sendMessage(chatId, 'ID: ${abon.uid}\nНомер телефона: ${abon.phone != null ? abon.phone! : 'еще не указан'}' '\n'  + menu['reg']!, reply_markup: markups['reg']);
         }
+      } else {
+        bot.sendMessage(chatId, mess['wrongId']!);
       }
       break;
     case 'enterPhone':
       if (isPhone(text)) {
         abon.phone = text;
         abon.menuLevel = 'askIdPhoneBack';
+        //sleep(Duration(seconds: 1));
         bot.sendMessage(chatId, 'Номер телефона сохранен');
-        bot.sendMessage(chatId, mess['askId&Phone']!,
-            reply_markup: markups['reg']);
+        //bot.sendMessage(chatId, mess['askId&Phone']!, reply_markup: markups['reg']);
         if (abon.uid != null && abon.uid! > 0) {
           var resp = await abon.register();
           if (!resp['error']) {
@@ -84,10 +88,14 @@ unregHandler(String text, TeleDart bot, int chatId, Abon abon) async {
                 reply_markup: markups['topIn']);
           } else {
             abon.menuLevel = 'askIdPhoneBack';
-            bot.sendMessage(chatId, resp['message'],
+            bot.sendMessage(chatId, 'ИНФО: ' + resp['message'] + '\nПроверьте правильность введенных данных:\n' +  '\nID: ${abon.uid}\nНомер телефона: ${abon.phone}' '\n\n' + menu['reg']!,
                 reply_markup: markups['reg']);
           }
+        } else {
+          bot.sendMessage(chatId, 'ID: ${abon.uid}\nНомер телефона: ${abon.phone != null ? abon.phone! : 'еще не указан'}' '\n' + menu['reg']!, reply_markup: markups['reg']);
         }
+      } else {
+        bot.sendMessage(chatId, mess['wrongPhone']!);
       }
       break;
     default:
