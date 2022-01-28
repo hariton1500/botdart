@@ -2,6 +2,50 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:teledart/model.dart' as m;
+
+class Bot {
+  String? url;
+  int? updateId;
+  int? chatId;
+  String? text;
+
+  Bot({required String token}) {
+    url = 'https://api.telegram.org/bot$token/';
+  }
+
+  // ignore: non_constant_identifier_names
+  void sendMessage(int chatId, String text,
+      {String? parse_mode, m.ReplyMarkup? reply_markup}) {
+    var _body = {'chat_id': chatId, 'text': text};
+    String _url = url!;
+    _url += '?chat_id=$chatId&text=$text';
+    if (parse_mode != null) {
+      _body['parse_mode'] = parse_mode;
+      _url += '&parse_mode=$parse_mode';
+    }
+    if (reply_markup != null) {
+      _body['reply_markup'] = reply_markup;
+      _url += '&reply_markup=${reply_markup.toString()}';
+    }
+    http.get(Uri.parse(url!));
+  }
+
+  Future<dynamic> getUpdate() async {
+    String _url = url! + 'getUpdates';
+    if (updateId != null) {
+      _url += '?offset=${updateId! + 1}';
+    }
+    var _body = {
+      'offset': 0,
+    };
+    //print('=>$_url');
+    var resp = await http.get(Uri.parse(_url));
+    return jsonDecode(resp.body);
+  }
+
+  void stop() {}
+}
 
 class Abon {
   int? chatId;

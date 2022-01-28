@@ -37,7 +37,8 @@ Future<void> main(List<String> arguments) async {
       if (abons.containsKey(chatId)) {
         abons.remove(chatId);
       }
-      teledart.sendMessage(commMess.chat.id, mess['start']! + mess['itCan']! + mess['about']! + menu['topNotIn']!,
+      teledart.sendMessage(commMess.chat.id,
+          mess['start']! + mess['itCan']! + mess['about']! + menu['topNotIn']!,
           reply_markup: markups['topNotIn']!);
     } else {
       teledart.sendMessage(commMess.chat.id, mess['isReg']! + menu['topIn']!);
