@@ -35,12 +35,12 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
           break;
         case 'справочник абонента':
           bot.sendMessage(chatId,
-              'Добро пожаловать в справочную абонента. Выбор тем внизу экрана:',
+              mess['info']! + menu['info']!,
               reply_markup: markups['help']);
           abon.menuLevel = 'help';
           break;
         default:
-          bot.sendMessage(chatId, mess['topIn']! + menu['topIn']!,
+          bot.sendMessage(chatId, mess['not']! + menu['topIn']!,
               reply_markup: markups['topIn']);
       }
       break;
@@ -170,7 +170,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
           break;
         case 'способы оплаты':
           bot.sendMessage(chatId,
-              'https://evpanet.com/users/payments.html?tmpl=component&print=1');
+              answer['payVars']!, reply_markup: markups['help']);
           break;
         case 'назад':
           abon.menuLevel = 'top';

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 //import 'package:teledart/model.dart';
+import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 
@@ -14,19 +15,21 @@ Future<void> main(List<String> arguments) async {
 
   var token = '5074469034:AAEfZA-kiuBPS840S66Fj2v7kJs_wKLe1QQ';
 
-  final username = (await Telegram(token).getMe()).username;
+  final telegram = Telegram(token);
+  final username = (await telegram.getMe()).username;
 
   int readedMessageId = 2369;
   bool isRegistered = false;
 
-  var teledart = TeleDart(token, Event(username!));
+  var teledart = TeleDart(token, Event(username!), fetcher: LongPolling(telegram, timeout: 50));
 
   var mesStream = teledart.onMessage(entityType: '*');
-  var commandStartStream = teledart.onCommand('start');
+  //var commandStartStream = teledart.onCommand('start');
   //var m = Data();
   Map<String, Abon> abons = {};
   Map<String, Map<String, dynamic>> users = {};
 
+  /*
   commandStartStream.listen((commMess) async {
     isRegistered = await isChatRegistered(commMess.chat.id);
     if (!isRegistered) {
@@ -39,7 +42,7 @@ Future<void> main(List<String> arguments) async {
     } else {
       teledart.sendMessage(commMess.chat.id, mess['isReg']! + menu['topIn']!);
     }
-  });
+  });*/
 
   Future<void> messageHandler(DateTime date, int chatId, String text) async {
     text = text.toLowerCase();
@@ -52,6 +55,20 @@ Future<void> main(List<String> arguments) async {
       sleep(Duration(seconds: 1));
       teledart.stop();
       exit(1);
+    }
+    if (text.contains('start')) {
+      print('start command');
+      isRegistered = await isChatRegistered(chatId);
+      if (!isRegistered) {
+        //String chatId = chatId.toString();
+        if (abons.containsKey(chatId)) {
+          abons.remove(chatId);
+        }
+        teledart.sendMessage(chatId, mess['start']! + mess['itCan']! + mess['about']! + menu['topNotIn']!,
+            reply_markup: markups['topNotIn']!);
+      } else {
+        teledart.sendMessage(chatId, mess['isReg']! + menu['topIn']!);
+      }
     }
     var statusReg = abons[chatId.toString()]!.statusReg;
     switch (statusReg) {

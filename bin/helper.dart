@@ -29,6 +29,9 @@ var options = {
   'full': btnFull.text,
   'pay': btnPay.text,
   'mess': btnMess.text,
+  'payVars': btnPayVars.text,
+  'servList': btnList.text,
+  'chR': btnChR.text,
 };
 var menu = {
   'reg':
@@ -38,6 +41,7 @@ var menu = {
   'accs':
       '1. ${options['brief']}\n2. ${options['full']}\n3. ID - Меню управления учетной записью\n4. ${options['back']}',
   'id': '1. ${options['pay']}\n2. ${options['mess']}\n3. ${options['back']}',
+  'info': '1. ${options['payVars']}\n2. ${options['servList']}\n3. ${options['chR']}\n4. ${options['back']}',
 };
 
 var mess = {
@@ -57,6 +61,8 @@ var mess = {
       'Введенный номер не корректный. Нужно вводить в фрмате +7ХХХХХХХХХХ. Повторите ввод',
   'accs': 'Вы перешли в раздел управления учетными записями\n',
   'id': 'Вы перешли в раздел управления учетной записью',
+  'not': 'ИНФО: Извините, в этом разделе меню данная команда не распознана.\nДоступны следующие команды:\n\n',
+  'info': 'Добро пожаловать в справочную абонента.\nДоступны следующие темы:\n\n',
 };
 var markups = {
   'topIn': ReplyKeyboardMarkup(keyboard: [
@@ -83,6 +89,18 @@ var markups = {
     [btnPayVars, btnList],
     [btnChR, btnBack]
   ], resize_keyboard: true),
+};
+
+var answer = {
+  'payVars': '''
+Оплату за интернет можно произвести несколькими способами:
+
+Для физических лиц:
+ - через терминалы самообслуживания
+ - в Личном кабинете абонента с помощью Карты МИР, Яндекс.Деньги, и тд
+
+Для юридических лиц:
+ - Перечисление на расчетный счет ИП Зинштейн Х. В.'''
 };
 
 Future<bool> isChatRegistered(int chatId) async {
