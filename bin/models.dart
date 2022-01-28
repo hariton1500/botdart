@@ -102,6 +102,13 @@ class Abon {
     if (brief) {
       return guids!.map((guid) => users[guid]!['id']).toList().toString();
     } else {
+      String list = '';
+      for (var guid in guids!) {
+        selectedGuid = guid;
+        selectedId = int.parse(users[guid]!['id'].toString());
+        list += showUserInfo(users) + '\n';
+      }
+      return list;
       return guids!
           .map((guid) {
             selectedGuid = guid;

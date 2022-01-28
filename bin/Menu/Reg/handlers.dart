@@ -33,7 +33,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
                     .map((guid) => int.parse(users[guid]!['id'].toString()))
                     .toList()),
                 [btnBack]
-              ]));
+              ], resize_keyboard: true));
           break;
         case 'справочник абонента':
           bot.sendMessage(chatId,
@@ -204,8 +204,8 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
             var res = await abon.getInfo(chatId, guid);
             if (!res['error']) {
               users[guid] = res['message']['userinfo'];
-              bot.sendMessage(chatId, '${users[guid]!['id']} - информация загружена/обновлена');
-              sleep(Duration(milliseconds: 300));
+              //bot.sendMessage(chatId, '${users[guid]!['id']} - информация загружена/обновлена');
+              //sleep(Duration(milliseconds: 300));
             }
           }
           bot.sendMessage(chatId, mess['accs']! + menu['accs']!,
@@ -215,7 +215,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
                     .map((guid) => int.parse(users[guid]!['id'].toString()))
                     .toList()),
                 [btnBack]
-              ]));
+              ], resize_keyboard: true));
           break;
         case 'справочник абонента':
           bot.sendMessage(chatId,
@@ -327,7 +327,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
           if (int.tryParse(text) != null) {
             bot.sendMessage(chatId,
                 'Для пополнения баланса учетной записи ${abon.selectedId} перейдите по ссылке:');
-            sleep(Duration(milliseconds: 300));
+            sleep(Duration(milliseconds: 500));
             var res = await abon.getPaymentId(abon.selectedGuid!, chatId);
             String url =
                 'https://paymaster.ru/payment/init?LMI_MERCHANT_ID=95005d6e-a21d-492a-a4c5-c39773020dd3&LMI_PAYMENT_AMOUNT=' +
@@ -340,7 +340,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
                 parse_mode: 'markdown',
                 reply_markup: ReplyKeyboardMarkup(keyboard: [
                   [btnBack]
-                ]));
+                ], resize_keyboard: true));
             abon.menuLevel = 'id';
           }
       }
@@ -355,7 +355,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
           break;
         case 'способы оплаты':
           bot.sendMessage(chatId,
-              'https://evpanet.com/users/payments.html?tmpl=component&print=1');
+              answer['payVars']!);
           break;
         case 'назад':
           abon.menuLevel = 'top';
