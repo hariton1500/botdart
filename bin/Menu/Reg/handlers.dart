@@ -36,8 +36,7 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
               ], resize_keyboard: true));
           break;
         case 'справочник абонента':
-          bot.sendMessage(chatId,
-              mess['info']! + menu['info']!,
+          bot.sendMessage(chatId, mess['info']! + menu['info']!,
               reply_markup: markups['help']);
           abon.menuLevel = 'help';
           break;
@@ -171,8 +170,8 @@ regHandler(String text, TeleDart bot, int chatId, Abon abon,
           bot.sendMessage(chatId, mess['services']!);
           break;
         case 'способы оплаты':
-          bot.sendMessage(chatId,
-              answer['payVars']!, reply_markup: markups['help']);
+          bot.sendMessage(chatId, answer['payVars']!,
+              reply_markup: markups['help']);
           break;
         case 'назад':
           abon.menuLevel = 'top';
@@ -232,10 +231,14 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
       switch (text) {
         case 'показать кратко':
           print('показать кратко');
-          bot.sendMessage(chatId, abon.showUsersInfo(true, users));
+          bot.sendMessage(
+              chatId, abon.showUsersInfo(true, users) + '\n\n' + menu['accs']!);
+          //bot.sendMessage(chatId, menu['accs']!);
           break;
         case 'показать подробно':
-          bot.sendMessage(chatId, abon.showUsersInfo(false, users));
+          bot.sendMessage(
+              chatId, abon.showUsersInfo(false, users) + '\n' + menu['accs']!);
+          //bot.sendMessage(chatId, menu['accs']!);
           break;
         case 'назад':
           abon.menuLevel = 'top';
@@ -258,15 +261,18 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
               abon.menuLevel = 'id';
             } else {
               print('$id not found in ${abon.showUsersInfo(true, users)}');
+              bot.sendMessage(
+                  chatId, mess['wrongId']! + '\n\n' + menu['accs']!);
             }
           } else {
             print('text is not digit');
+            bot.sendMessage(chatId, mess['not']! + menu['accs']!);
           }
       }
       break;
     case 'id':
       switch (text) {
-        case 'сообщение с службу поддержки':
+        case 'сообщение в службу поддержки':
           bot.sendMessage(
               chatId, 'Введите текст сообщения для службы поддержки:',
               reply_markup: ReplyKeyboardMarkup(keyboard: [
@@ -281,6 +287,20 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
                 [btnBack]
               ], resize_keyboard: true));
           abon.menuLevel = 'id_sum';
+          break;
+        case 'вкл/выкл автоактивацию':
+          var ress = await abon.sendAuto(abon.selectedGuid, chatId);
+          if (!ress['error']) {
+            bot.sendMessage(chatId,
+                'ИНФО: Автоактивация - ${ress['message']['value'] == 0 ? 'Выключена' : 'Включена'}');
+          }
+          break;
+        case 'вкл/выкл родительский контроль':
+          var ress = await abon.sendParent(abon.selectedGuid, chatId);
+          if (!ress['error']) {
+            bot.sendMessage(chatId,
+                'ИНФО: Родительский контроль - ${ress['message']['value'] == 0 ? 'Выключен' : 'Включен'}');
+          }
           break;
         case 'назад':
           abon.menuLevel = 'accs';
@@ -300,8 +320,8 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
       switch (text) {
         case 'назад':
           abon.menuLevel = 'id';
-          bot.sendMessage(chatId,
-              '${mess['id']}\n\n${abon.showUserInfo(users)}\n\n${menu['id']}',
+          bot.sendMessage(
+              chatId, '${abon.showUserInfo(users)}\n\n${menu['id']}',
               reply_markup: markups['id']);
           break;
         default:
@@ -354,8 +374,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
           bot.sendMessage(chatId, mess['services']!);
           break;
         case 'способы оплаты':
-          bot.sendMessage(chatId,
-              answer['payVars']!);
+          bot.sendMessage(chatId, answer['payVars']!);
           break;
         case 'назад':
           abon.menuLevel = 'top';

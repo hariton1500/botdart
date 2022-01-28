@@ -40,8 +40,12 @@ class Bot {
     if (updateId != null) {
       _url += '?offset=${updateId! + 1}';
     }
-    var resp = await http.get(Uri.parse(_url));
-    return jsonDecode(resp.body);
+    try {
+      var resp = await http.get(Uri.parse(_url));
+      return jsonDecode(resp.body);
+    } catch (e) {
+      print(e);
+    }
   }
 
   void stop() {}
@@ -109,14 +113,6 @@ class Abon {
         list += showUserInfo(users) + '\n';
       }
       return list;
-      return guids!
-          .map((guid) {
-            selectedGuid = guid;
-            selectedId = int.parse(users[guid]!['id'].toString());
-            return showUserInfo(users) + '\n';
-          })
-          .toList()
-          .toString();
     }
   }
 
@@ -167,6 +163,22 @@ class Abon {
     var headers = {'token': chatId.toString()};
     var body = {'message': text, 'guid': guid};
     var resp = await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+    return jsonDecode(resp.body);
+  }
+
+  Future<Map<String, dynamic>> sendAuto(guid, chatId) async {
+    String apiUrl = 'https://evpanet.com/api/apk/user/auto_activation/';
+    var headers = {'token': chatId.toString()};
+    var body = {'guid': guid};
+    var resp = await http.put(Uri.parse(apiUrl), headers: headers, body: body);
+    return jsonDecode(resp.body);
+  }
+
+  Future<Map<String, dynamic>> sendParent(guid, chatId) async {
+    String apiUrl = 'https://evpanet.com/api/apk/user/parent_control/';
+    var headers = {'token': chatId.toString()};
+    var body = {'guid': guid};
+    var resp = await http.put(Uri.parse(apiUrl), headers: headers, body: body);
     return jsonDecode(resp.body);
   }
 

@@ -47,32 +47,36 @@ void main(List<String> args) {
           var results = message['result'];
           for (var result in results) {
             print(result);
-            teledart.updateId = result['update_id'];
-            String chatId = result['message']['chat']['id'].toString();
-            String text = result['message']['text'].toString();
-            if (text.contains('start')) {
-              bool isRegistered = await isChatRegistered(result['message']['chat']['id']);
-              if (!isRegistered) {
-                String chatId = teledart.chatId.toString();
-                if (abons.containsKey(chatId)) {
-                  abons.remove(chatId);
+            if (teledart.updateId != result['update_id']) {
+              teledart.updateId = result['update_id'];
+              String chatId = result['message']['chat']['id'].toString();
+              String text = result['message']['text'].toString();
+              if (text.contains('start')) {
+                bool isRegistered =
+                    await isChatRegistered(result['message']['chat']['id']);
+                if (!isRegistered) {
+                  String chatId = teledart.chatId.toString();
+                  if (abons.containsKey(chatId)) {
+                    abons.remove(chatId);
+                  }
+                  teledart.sendMessage(
+                      int.parse(chatId),
+                      mess['start']! +
+                          mess['itCan']! +
+                          mess['about']! +
+                          menu['topNotIn']!,
+                      reply_markup: markups['topNotIn']!);
+                } else {
+                  teledart.sendMessage(
+                      int.parse(chatId), mess['isReg']! + menu['topIn']!);
                 }
-                teledart.sendMessage(
-                    int.parse(chatId),
-                    mess['start']! +
-                        mess['itCan']! +
-                        mess['about']! +
-                        menu['topNotIn']!,
-                    reply_markup: markups['topNotIn']!);
               } else {
-                teledart.sendMessage(
-                    int.parse(chatId), mess['isReg']! + menu['topIn']!);
+                if (!abons.containsKey(chatId.toString())) {
+                  abons[chatId.toString()] =
+                      Abon.loadOrCreate(int.parse(chatId));
+                }
+                messageHandler(int.parse(chatId), text);
               }
-            } else {
-              if (!abons.containsKey(chatId.toString())) {
-                abons[chatId.toString()] = Abon.loadOrCreate(int.parse(chatId));
-              }
-              messageHandler(int.parse(chatId), text);
             }
           }
         }
