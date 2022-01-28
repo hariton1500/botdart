@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 import '../../models.dart';
@@ -202,8 +204,8 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
             var res = await abon.getInfo(chatId, guid);
             if (!res['error']) {
               users[guid] = res['message']['userinfo'];
-              bot.sendMessage(
-                  chatId, '${users[guid]!['id']} - информация загружена');
+              bot.sendMessage(chatId, '${users[guid]!['id']} - информация загружена/обновлена');
+              sleep(Duration(milliseconds: 300));
             }
           }
           bot.sendMessage(chatId, mess['accs']! + menu['accs']!,
@@ -325,6 +327,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
           if (int.tryParse(text) != null) {
             bot.sendMessage(chatId,
                 'Для пополнения баланса учетной записи ${abon.selectedId} перейдите по ссылке:');
+            sleep(Duration(milliseconds: 300));
             var res = await abon.getPaymentId(abon.selectedGuid!, chatId);
             String url =
                 'https://paymaster.ru/payment/init?LMI_MERCHANT_ID=95005d6e-a21d-492a-a4c5-c39773020dd3&LMI_PAYMENT_AMOUNT=' +

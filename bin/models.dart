@@ -17,18 +17,22 @@ class Bot {
   // ignore: non_constant_identifier_names
   void sendMessage(int chatId, String text,
       {String? parse_mode, m.ReplyMarkup? reply_markup}) {
-    var _body = {'chat_id': chatId, 'text': text};
+    Map<String, String> _body = {'chat_id': chatId.toString(), 'text': text};
     String _url = url!;
+    //var _headers = {'chat_id': chatId, 'text': text};
     _url += '?chat_id=$chatId&text=$text';
     if (parse_mode != null) {
       _body['parse_mode'] = parse_mode;
       _url += '&parse_mode=$parse_mode';
     }
     if (reply_markup != null) {
-      _body['reply_markup'] = reply_markup;
+      _body['reply_markup'] = jsonEncode(reply_markup);
       _url += '&reply_markup=${reply_markup.toString()}';
     }
-    http.get(Uri.parse(url!));
+    _url = url! + 'sendMessage';
+    //print('posting to:$_url with body: $_body');
+    //http.get(Uri.parse(_url), headers: _body);
+    http.post(Uri.parse(_url), body: _body);
   }
 
   Future<dynamic> getUpdate() async {
@@ -36,10 +40,6 @@ class Bot {
     if (updateId != null) {
       _url += '?offset=${updateId! + 1}';
     }
-    var _body = {
-      'offset': 0,
-    };
-    //print('=>$_url');
     var resp = await http.get(Uri.parse(_url));
     return jsonDecode(resp.body);
   }

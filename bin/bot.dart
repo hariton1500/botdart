@@ -51,7 +51,7 @@ void main(List<String> args) {
             String chatId = result['message']['chat']['id'].toString();
             String text = result['message']['text'].toString();
             if (text.contains('start')) {
-              bool isRegistered = await isChatRegistered(teledart.chatId!);
+              bool isRegistered = await isChatRegistered(result['message']['chat']['id']);
               if (!isRegistered) {
                 String chatId = teledart.chatId.toString();
                 if (abons.containsKey(chatId)) {
