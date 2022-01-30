@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 //import 'dart:io';
 
 import 'Menu/Reg/handlers.dart';
@@ -39,8 +40,8 @@ void main(List<String> args) {
     }
   }
 
-  Timer.periodic(Duration(milliseconds: 500), (timer) {
-    var update = teledart.getUpdate();
+  void start() {
+    var update = teledart.getUpdate().timeout(Duration(seconds: 5));
     update.then((message) async {
       if (message is Map) {
         if (message['ok']) {
@@ -59,6 +60,7 @@ void main(List<String> args) {
                 bool isRegistered =
                     await isChatRegistered(result['message']['chat']['id']);
                 if (!isRegistered) {
+                  String chatId = teledart.chatId.toString();
                   if (abons.containsKey(chatId)) {
                     abons.remove(chatId);
                   }
@@ -85,5 +87,8 @@ void main(List<String> args) {
         }
       }
     });
-  });
+    sleep(Duration(milliseconds: 500));
+    start();
+  }
+  start();
 }

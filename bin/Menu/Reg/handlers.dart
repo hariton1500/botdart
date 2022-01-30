@@ -291,15 +291,23 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
         case 'вкл/выкл автоактивацию':
           var ress = await abon.sendAuto(abon.selectedGuid, chatId);
           if (!ress['error']) {
+            var res = await abon.getInfo(chatId, abon.selectedGuid!);
+            if (!res['error']) {
+              users[abon.selectedGuid!] = res['message']['userinfo'];
+            }
             bot.sendMessage(chatId,
-                'ИНФО: Автоактивация - ${ress['message']['value'] == 0 ? 'Выключена' : 'Включена'}');
+                '${abon.showUserInfo(users)}\n\n${menu['id']}');
           }
           break;
         case 'вкл/выкл родительский контроль':
           var ress = await abon.sendParent(abon.selectedGuid, chatId);
           if (!ress['error']) {
+            var res = await abon.getInfo(chatId, abon.selectedGuid!);
+            if (!res['error']) {
+              users[abon.selectedGuid!] = res['message']['userinfo'];
+            }
             bot.sendMessage(chatId,
-                'ИНФО: Родительский контроль - ${ress['message']['value'] == 0 ? 'Выключен' : 'Включен'}');
+                '${abon.showUserInfo(users)}\n\n${menu['id']}');
           }
           break;
         case 'назад':

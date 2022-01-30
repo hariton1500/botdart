@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:teledart/teledart.dart';
 import '../../models.dart';
 import '../../helper.dart';
@@ -145,7 +147,7 @@ unregHandler2(String text, Bot bot, int chatId, Abon abon) async {
               reply_markup: markups['topNotIn']);
           break;
         default:
-        //bot.sendMessage(chatId, menu[abon.statusReg! ? 'topIn' : 'topNotIn']!, reply_markup: markups[abon.statusReg! ? 'topIn' : 'topNotIn']);
+          bot.sendMessage(chatId, mess['start']! + mess['itCan']! + mess['about']! + menu[abon.statusReg! ? 'topIn' : 'topNotIn']!, reply_markup: markups[abon.statusReg! ? 'topIn' : 'topNotIn']);
       }
       break;
     case 'askIdPhoneBack':
@@ -180,17 +182,20 @@ unregHandler2(String text, Bot bot, int chatId, Abon abon) async {
         abon.uid = int.parse(text);
         abon.menuLevel = 'askIdPhoneBack';
         bot.sendMessage(chatId, 'ID сохранен');
-        //sleep(Duration(seconds: 1));
         //bot.sendMessage(chatId, mess['askId&Phone']!, reply_markup: markups['reg']);
         if (abon.phone != null && abon.phone!.isNotEmpty) {
+          sleep(Duration(milliseconds: 500));
+          bot.sendMessage(chatId, 'Отправляем запрос на авторизацию ID - ${abon.uid} и Телефон - ${abon.phone}');
           var resp = await abon.register();
           if (!resp['error']) {
             abon.guids = List.from(resp['message']['guids']);
             abon.saveGuids();
             abon.menuLevel = 'top';
             abon.statusReg = true;
+            sleep(Duration(milliseconds: 500));
             bot.sendMessage(chatId, 'Авторизация прошла успешно');
-            bot.sendMessage(chatId, mess['topIn']! + menu['topIn']!,
+            sleep(Duration(milliseconds: 500));
+            bot.sendMessage(chatId, mess['accs']! + mess['topIn']! + menu['topIn']!,
                 reply_markup: markups['topIn']);
           } else {
             abon.menuLevel = 'askIdPhoneBack';
@@ -223,14 +228,17 @@ unregHandler2(String text, Bot bot, int chatId, Abon abon) async {
         bot.sendMessage(chatId, 'Номер телефона сохранен');
         //bot.sendMessage(chatId, mess['askId&Phone']!, reply_markup: markups['reg']);
         if (abon.uid != null && abon.uid! > 0) {
+          sleep(Duration(milliseconds: 500));
           var resp = await abon.register();
           if (!resp['error']) {
             abon.guids = List.from(resp['message']['guids']);
             abon.saveGuids();
             abon.menuLevel = 'top';
             abon.statusReg = true;
+            sleep(Duration(milliseconds: 500));
             bot.sendMessage(chatId, 'Авторизация прошла успешно');
-            bot.sendMessage(chatId, mess['topIn']! + menu['topIn']!,
+            sleep(Duration(milliseconds: 500));
+            bot.sendMessage(chatId, mess['accs']! + mess['topIn']! + menu['topIn']!,
                 reply_markup: markups['topIn']);
           } else {
             abon.menuLevel = 'askIdPhoneBack';
