@@ -150,7 +150,6 @@ class Abon {
       daysRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 / 24).floor();
       hoursRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 % daysRemain).floor();
     }
-    daysRemain = daysRemain.abs();
     return 'ID: $selectedId\n'
             'ФИО: $name\n'
             'Баланс: $balance руб.\n'
