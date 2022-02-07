@@ -13,7 +13,7 @@ import 'models.dart';
 Future<void> main(List<String> arguments) async {
   print('EvpaNet help bot');
 
-  var token = '5074469034:AAEfZA-kiuBPS840S66Fj2v7kJs_wKLe1QQ';
+  var token = '';
 
   final telegram = Telegram(token);
   final username = (await telegram.getMe()).username;
@@ -49,6 +49,7 @@ Future<void> main(List<String> arguments) async {
     text = text.toLowerCase();
     //print('[$date] ($chatId) $text');
     print('in <$text>' + abons[chatId.toString()]!.toString());
+    /*
     if (text.contains('stop')) {
       print('exiting on stop command');
       teledart.sendMessage(chatId, 'Остановка бота...',
@@ -56,7 +57,7 @@ Future<void> main(List<String> arguments) async {
       sleep(Duration(seconds: 1));
       teledart.stop();
       exit(1);
-    }
+    }*/
     if (text.contains('start')) {
       print('start command');
       isRegistered = await isChatRegistered(chatId);

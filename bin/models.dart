@@ -138,11 +138,18 @@ class Abon {
     //print(user['allowed_tarifs']);
     //tarifs.addAll(user['allowed_tarifs']);
     //String dayPrice = user['days_price'];
+    String remainText;
+    if (daysRemain >= 0) {
+      remainText = 'Осталось дней';
+    } else {
+      remainText = 'Просрочено дней';
+    }
+    daysRemain = daysRemain.abs();
     return 'ID: $selectedId\n'
             'ФИО: $name\n'
             'Баланс: $balance руб.\n'
             'Задолжность: $debt руб.\n'
-            'Дата окончания срока действия пакета: $endDate. Осталось дней: $daysRemain\n'
+            'Дата окончания срока действия пакета: $endDate. $remainText: $daysRemain\n'
             'Тариф: $tarifName ($tarifSum руб.)\n'
             'Адрес: $street д. $house кв. $flat\n'
             'IP адрес: $ip\n'
