@@ -67,7 +67,7 @@ class Abon {
 
   Abon.loadOrCreate(int id) {
     //users = {};
-    var file = File('$id.dat');
+    var file = File('guids/$id.dat');
     if (file.existsSync()) {
       print('file exists');
       guids = List.from(jsonDecode(file.readAsStringSync()));
@@ -92,7 +92,8 @@ class Abon {
   }
 
   Future<void> saveGuids() async {
-    var file = File('$chatId.dat');
+    var file = File('guids/$chatId.dat');
+    await file.create(recursive: true);
     file.writeAsString(jsonEncode(guids));
   }
 
@@ -124,7 +125,8 @@ class Abon {
     double balance = double.parse(user['extra_account']);
     //login = user['login'];
     //password = user['clear_pass'];
-    int daysRemain = (int.parse(user['packet_secs']) / 60 / 60 / 24).round();
+    int daysRemain;
+    int hoursRemain;
     String endDate = user['packet_end'] ?? '00.00.0000 00:00';
     double debt = double.parse(user['debt'] ?? 0.0);
     String tarifName = user['tarif_name'];
@@ -138,11 +140,21 @@ class Abon {
     //print(user['allowed_tarifs']);
     //tarifs.addAll(user['allowed_tarifs']);
     //String dayPrice = user['days_price'];
+    String remainText;
+    if (int.parse(user['packet_secs']) >= 0) {
+      remainText = 'Осталось';
+      daysRemain = (int.parse(user['packet_secs']) / 60 / 60 / 24).floor();
+      hoursRemain = (int.parse(user['packet_secs']) / 60 / 60 % daysRemain).floor();
+    } else {
+      remainText = 'Просрочено';
+      daysRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 / 24).floor();
+      hoursRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 % daysRemain).floor();
+    }
     return 'ID: $selectedId\n'
             'ФИО: $name\n'
             'Баланс: $balance руб.\n'
             'Задолжность: $debt руб.\n'
-            'Дата окончания срока действия пакета: $endDate. Осталось дней: $daysRemain\n'
+            'Дата окончания срока действия пакета: $endDate. $remainText: $daysRemain дн. $hoursRemain ч.\n'
             'Тариф: $tarifName ($tarifSum руб.)\n'
             'Адрес: $street д. $house кв. $flat\n'
             'IP адрес: $ip\n'
