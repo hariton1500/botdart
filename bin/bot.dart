@@ -8,7 +8,7 @@ import 'models.dart';
 
 void main(List<String> args) {
   print('dart bot v2 start...');
-  var token = '';
+  var token = args[0].toString();
 
   Bot teledart = Bot(token: token);
 
