@@ -364,6 +364,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
                     res['message']['payment_id'].toString() +
                     '&LMI_PAYMENT_DESC=%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20EvpaNet%20ID%20' +
                     abon.selectedId.toString();
+            url = 'https://payberry.ru/pay/26?acc=${abon.selectedId.toString()}';
             bot.sendMessage(chatId, '[ПОПОЛНИТЬ БАЛАНС]($url)',
                 parse_mode: 'markdown',
                 reply_markup: ReplyKeyboardMarkup(keyboard: [
