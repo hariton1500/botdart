@@ -125,8 +125,8 @@ class Abon {
     double balance = double.parse(user['extra_account']);
     //login = user['login'];
     //password = user['clear_pass'];
-    int daysRemain;
-    int hoursRemain;
+    int daysRemain = 0;
+    int hoursRemain = 0;
     String endDate = user['packet_end'] ?? '00.00.0000 00:00';
     double debt = double.parse(user['debt'] ?? 0.0);
     String tarifName = user['tarif_name'];
@@ -140,15 +140,19 @@ class Abon {
     //print(user['allowed_tarifs']);
     //tarifs.addAll(user['allowed_tarifs']);
     //String dayPrice = user['days_price'];
-    String remainText;
-    if (int.parse(user['packet_secs']) >= 0) {
-      remainText = 'Осталось';
-      daysRemain = (int.parse(user['packet_secs']) / 60 / 60 / 24).floor();
-      hoursRemain = (int.parse(user['packet_secs']) / 60 / 60 % daysRemain).floor();
-    } else {
-      remainText = 'Просрочено';
-      daysRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 / 24).floor();
-      hoursRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 % daysRemain).floor();
+    String remainText = '';
+    try {
+      if (int.parse(user['packet_secs']) >= 0) {
+        remainText = 'Осталось';
+        daysRemain = (int.parse(user['packet_secs']) / 60 / 60 / 24).floor();
+        hoursRemain = (int.parse(user['packet_secs']) / 60 / 60 % daysRemain).floor();
+      } else {
+        remainText = 'Просрочено';
+        daysRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 / 24).floor();
+        hoursRemain = (int.parse(user['packet_secs']).abs() / 60 / 60 % daysRemain).floor();
+      }
+    } catch (e) {
+      print(e);
     }
     return 'ID: $selectedId\n'
             'ФИО: $name\n'
