@@ -356,6 +356,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
             bot.sendMessage(chatId,
                 'Для пополнения баланса учетной записи ${abon.selectedId} перейдите по ссылке:');
             sleep(Duration(milliseconds: 500));
+            /*
             var res = await abon.getPaymentId(abon.selectedGuid!, chatId);
             String url =
                 'https://paymaster.ru/payment/init?LMI_MERCHANT_ID=95005d6e-a21d-492a-a4c5-c39773020dd3&LMI_PAYMENT_AMOUNT=' +
@@ -363,8 +364,8 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
                     '&LMI_CURRENCY=RUB&LMI_PAYMENT_NO=' +
                     res['message']['payment_id'].toString() +
                     '&LMI_PAYMENT_DESC=%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20EvpaNet%20ID%20' +
-                    abon.selectedId.toString();
-            url = 'https://payberry.ru/pay/26?acc=${abon.selectedId.toString()}';
+                    abon.selectedId.toString();*/
+            String url = 'https://payberry.ru/pay/26?acc=${abon.selectedId.toString()}';
             bot.sendMessage(chatId, '[ПОПОЛНИТЬ БАЛАНС]($url)',
                 parse_mode: 'markdown',
                 reply_markup: ReplyKeyboardMarkup(keyboard: [
