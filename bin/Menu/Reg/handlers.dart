@@ -201,6 +201,7 @@ regHandler2(String text, Bot bot, int chatId, Abon abon,
           abon.menuLevel = 'accs';
           for (var guid in abon.guids!) {
             var res = await abon.getInfo(chatId, guid);
+            print(res);
             if (res != {} && !res['error']) {
               users[guid] = res['message']['userinfo'];
               //bot.sendMessage(chatId, '${users[guid]!['id']} - информация загружена/обновлена');
