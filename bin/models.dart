@@ -87,6 +87,7 @@ class Abon {
     String apiUrl = 'https://evpanet.com/api/apk/login/user';
     var headers = {'token': chatId.toString()};
     var body = {'number': phone, 'uid': uid.toString()};
+    print('requestUrl = $apiUrl; headers = $headers; body = $body');
     var resp = await http.post(Uri.parse(apiUrl), body: body, headers: headers);
     return jsonDecode(resp.body);
   }
