@@ -102,6 +102,7 @@ class Abon {
     print('start get abon info for $guid');
     String apiUrl = 'https://evpanet.com/api/apk/user/info/' + guid;
     var headers = {'token': chatId.toString()};
+    print('requestUrl = $apiUrl; headers = $headers');
     var resp = await http.get(Uri.parse(apiUrl), headers: headers);
     return jsonDecode(resp.body);
   }
