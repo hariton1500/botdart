@@ -99,7 +99,7 @@ class Abon {
   }
 
   Future<Map<String, dynamic>> getInfo(int chatId, String guid) async {
-    Map<String, dynamic> json = {};
+    Map<String, dynamic> json = {'error': true};
     print('start get abon info for $guid');
     String apiUrl = 'https://evpanet.com/api/apk/user/info/' + guid;
     var headers = {'token': chatId.toString()};
